@@ -15,6 +15,19 @@ export const QuizProvider = ({children}) => {
         .then((res) => res.json())
         .then((res) => setCategories(Object.keys(res)))
     },[])
+    useEffect(()=>{
+        if(questions && questions.length>0)
+        {   
+            const quizData = {
+                question : questions,
+                indices : 0,
+                scores : 0
+            }
+            window.localStorage.setItem("list",JSON.stringify(quizData))
+            
+            navigate('/quiz')
+        }
+    },[questions])
     
     const fetchQuestions = (e,{limit,difficulties,category}) => {
         e.preventDefault()
@@ -25,8 +38,6 @@ export const QuizProvider = ({children}) => {
         fetch(url)
         .then((res) => res.json())
         .then((res) => setQuestions(res))
-
-        navigate('/quiz')
 
     }
 

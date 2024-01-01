@@ -36,6 +36,7 @@ function App() {
         </select>
         <label>category of Questions</label>
         <select name="category" id="category list" value={selectedOueries.category} onChange={ChangleHandler}>
+            <option value={"Arts & Literature"}>--Please select a category</option>
             {
               categories && categories.map((items)=>(
                 <option key={items} value={items}>
@@ -44,7 +45,7 @@ function App() {
               ))
             }
         </select>
-        <button>Create Quiz</button>
+        <button type="submit">Create Quiz</button>
     </form>
   );
 }

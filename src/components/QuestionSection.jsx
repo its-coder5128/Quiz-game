@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { useQuiz } from '../context/QuizContext'
 import AnswerQues from './AnswerQues'
 import { Link } from 'react-router-dom'
 
 function QuestionSection(){
   
   const [ques,setQues] = useState([])
-  const [index,setIndex] = useState(0)
+  const [index,setIndex] = useState(-1)
   const [score,setScore] = useState(0)
   const [loading, setLoading] = useState(true)
+
   const handleAnswer = (answer) => {
     if(answer === ques[index].correctAnswer )
     {
@@ -16,16 +16,26 @@ function QuestionSection(){
     }
     setIndex(index+1)
   }
-  const {questions} = useQuiz()
+
+  let QnS = JSON.parse(window.localStorage.getItem("list"))
 
   useEffect(()=>{
-    console.log(questions)
-    setQues(questions)
-    setTimeout(() => {
-      setLoading(false)
-    }, "1000");
+    setQues(QnS.question)
+    setIndex(QnS.indices)
+    setScore(QnS.scores)
     
-  },[questions])
+    setLoading(false)
+  },[])
+
+  useEffect(()=>{
+    const quizData = {
+      question : ques,
+      indices : index,
+      scores : score
+    }
+    window.localStorage.setItem("list",JSON.stringify(quizData))
+  },[index])
+
 
   return (
     <>
