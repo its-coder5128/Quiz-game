@@ -3,12 +3,12 @@ import { useQuiz } from "../context/QuizContext";
 
 
 function App() {
-  const [count,setCount] = useState(0)
-  const {questions,categories,fetchQuestions} = useQuiz()
+  const {questions,isContest,categories,fetchQuestions,fetchQuestionsforContest} = useQuiz()
   const [selectedOueries,setSelectedOueries] = useState({
     limit : "10",
     difficulties : "medium",
-    category : "Arts & Literature"
+    category : "Arts & Literature",
+    name : ""
   })
 
   const ChangleHandler = (e) => {
@@ -22,7 +22,12 @@ function App() {
     console.log(questions)
   },[selectedOueries,questions])
   return (
-    <form onSubmit={(e) => fetchQuestions(e,selectedOueries)}> 
+    <form onSubmit={(e) => {isContest?fetchQuestionsforContest(e,selectedOueries):fetchQuestions(e,selectedOueries)}}> 
+
+        {isContest?<div>
+          <label>Name of Contest</label>
+          <input type="text" required value={selectedOueries.name} name="name" id="name list" onChange={ChangleHandler}/>
+                  </div>:null}
         <label>Number of Questions</label>
         <select name="limit" id="limit list" value={selectedOueries.limit} onChange={ChangleHandler}>
             <option value={10}>10</option>
@@ -37,7 +42,7 @@ function App() {
         </select>
         <label>category of Questions</label>
         <select name="category" id="category list" value={selectedOueries.category} onChange={ChangleHandler}>
-            <option value={"Arts & Literature"}>--Please select a category</option>
+            <option value={"default"}>--Please select a category</option>
             {
               categories && categories.map((items)=>(
                 <option key={items} value={items}>
@@ -46,7 +51,7 @@ function App() {
               ))
             }
         </select>
-        <button type="submit">Create Quiz</button>
+        <button type="submit">Create {isContest?"Contest":"Quiz"}</button>
     </form>
   );
 }
