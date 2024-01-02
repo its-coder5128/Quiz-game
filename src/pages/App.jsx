@@ -3,6 +3,7 @@ import { useQuiz } from "../context/QuizContext";
 
 
 function App() {
+  const [count,setCount] = useState(0)
   const {questions,categories,fetchQuestions} = useQuiz()
   const [selectedOueries,setSelectedOueries] = useState({
     limit : "10",
