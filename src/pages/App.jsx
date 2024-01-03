@@ -26,7 +26,7 @@ function App() {
 
         {isContest?<div>
           <label>Name of Contest</label>
-          <input type="text" required value={selectedOueries.name} name="name" id="name list" onChange={ChangleHandler}/>
+          <input type="text" required value={selectedOueries.name} placeholder="Enter Contest Name" name="name" id="name list" onChange={ChangleHandler}/>
                   </div>:null}
         <label>Number of Questions</label>
         <select name="limit" id="limit list" value={selectedOueries.limit} onChange={ChangleHandler}>

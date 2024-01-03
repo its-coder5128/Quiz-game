@@ -11,7 +11,7 @@ export const QuizProvider = ({children}) => {
 
     const {user} = useAuth()
 
-
+    const [contestPlayerData,setContestPlayerData] = useState({contestId: "",PlayerName: "", Score: ""})
     const [isContest,setIscontest] = useState(false)
     const [questions,setQuestions] = useState([])
     const [contests,setContest] = useState([])
@@ -23,11 +23,22 @@ export const QuizProvider = ({children}) => {
 
     useEffect(()=>{
         getAllContest()
-
+        setIscontest(JSON.parse(window.localStorage.getItem("ContestLive")))
+        setContestQuesData(JSON.parse(window.localStorage.getItem("contestQuesData")))
+        setContestPlayerData(JSON.parse(window.localStorage.getItem("PlayerData")))
         fetch('https://the-trivia-api.com/v2/categories')
         .then((res) => res.json())
         .then((res) => setCategories(Object.keys(res)))
     },[])
+    useEffect(()=>{
+        
+        // window.localStorage.setItem("ContestLive",isContest)
+
+    },[isContest])
+    useEffect(()=>{
+        if(contestPlayerData && contestPlayerData.PlayerName.length>0)
+            window.localStorage.setItem("PlayerData",JSON.stringify(contestPlayerData))
+    },[contestPlayerData])
     const getAllContest = async () => {
         let response = await database.listDocuments(conf.appwrite_Database_ID, conf.appwrite_Contest_Ques_Collection_ID,[Query.orderDesc("$createdAt"),Query.limit(100)])
         console.log(response)
@@ -36,15 +47,13 @@ export const QuizProvider = ({children}) => {
     useEffect(()=>{
         if(questions && questions.length>0)
         {     
-            if(isContest)
+            if(isContest && !contestQuesData)
             {
                 setIscontest(false)
                 const ques = JSON.stringify(questions);
-                createContest({User_ID: user.$id,ContestName: contestName,Questions: ques})
+                createContest({User_ID: user?.$id,ContestName: contestName,Questions: ques})
                 getAllContest()
-                navigate("")
-
-                
+                navigate("")  
             }
             else{
                 const quizData = {
@@ -56,6 +65,7 @@ export const QuizProvider = ({children}) => {
 
                 if(contestQuesData)
                 {
+                    window.localStorage.setItem("contestQuesData",JSON.stringify(contestQuesData))
                     setIscontest(true)
                     navigate("/contest")
                 }
@@ -65,6 +75,11 @@ export const QuizProvider = ({children}) => {
             }
         }
     },[questions])
+
+    const handleContestPlayerData = (name,value) => {
+        setContestPlayerData((prev) => ({...prev, [name] : value}))
+        setContestPlayerData((prev) => ({...prev, contestId : contestQuesData?.$id}))
+    }
 
     const createContest = async (contestData) => {
         try{
@@ -111,9 +126,17 @@ export const QuizProvider = ({children}) => {
 
     const handleContestReq = (contestData) => {
         console.log("contestData",contestData)
+        handleContestPlayerData("contestId",contestData.$id)
         setContestQuesData(contestData)
         setQuestions(JSON.parse(contestData.Questions))
         
+    }
+    const handleContestData = (data) =>{
+        setContestQuesData(data)
+    }
+    const createContestEntry = () => {
+        let item = JSON.parse(window.localStorage.getItem("PlayerData"))
+        console.log(item)
     }
 
     const quizData ={
@@ -127,6 +150,9 @@ export const QuizProvider = ({children}) => {
         fetchQuestionsforContest,
         removeContest,
         handleContestReq,
+        handleContestData,
+        handleContestPlayerData,
+        createContestEntry,
     }
 
     return(

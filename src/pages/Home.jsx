@@ -6,11 +6,13 @@ import { useQuiz } from '../context/QuizContext'
 
 function Home(){
   const {user,handleLogout} = useAuth()
-  const {contests,changeIsContestto,removeContest,handleContestReq} = useQuiz()
+  const {contests,changeIsContestto,removeContest,handleContestReq,handleContestData} = useQuiz()
   const navigate = useNavigate()
   
   useEffect(()=>{
     changeIsContestto(false)
+    window.localStorage.setItem("ContestLive","false")
+    handleContestData(null)
   },[])
   useEffect(()=>{
     console.log("contest",contests)
