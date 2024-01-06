@@ -9,10 +9,16 @@ function BaseLayout(){
   return (
     <AuthProvider>
       <QuizProvider>
-          <div>
-            <Header/>
-            <Outlet/>
-            <Footer/>
+          <div className=' flex flex-col justify-start bg-orange-100 min-h-screen'>
+            <div>
+              <Header/>
+            </div>
+            <div className=' mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8 font-medium text-gray-700'>
+              <Outlet/>
+            </div>
+            <div className=' mt-auto'>
+              <Footer/>
+            </div>
           </div>
       </QuizProvider>
     </AuthProvider>

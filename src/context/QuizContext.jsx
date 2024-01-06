@@ -32,7 +32,7 @@ export const QuizProvider = ({children}) => {
         .then((res) => setCategories(Object.keys(res)))
     },[])
     useEffect(()=>{
-        if(contestPlayerData && contestPlayerData.PlayerName.length>0)
+        if(contestPlayerData && contestPlayerData.PlayerName?.length>0)
             window.localStorage.setItem("PlayerData",JSON.stringify(contestPlayerData))
     },[contestPlayerData])
     const getAllContest = async () => {
