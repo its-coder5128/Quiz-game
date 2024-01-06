@@ -30,7 +30,7 @@ function QuestionSection(){
       scores : 0
     }
     window.localStorage.setItem("list",JSON.stringify(quizData))
-    navigate("/contest")
+    navigate("/")
   }
 
   let QnS = JSON.parse(window.localStorage.getItem("list"))
@@ -78,7 +78,10 @@ function QuestionSection(){
           {
             ques && index === ques.length && <div>
               <p>Quiz completed</p>
-              {isContest?<button onClick={handleContestPlayer}>Submit</button>:<Link to={"/createQuiz"}>Create new Quiz</Link>}
+              {isContest? <div>
+                            <strong>Score : {score}</strong>
+                            <button onClick={handleContestPlayer}>Submit</button>
+                          </div> : <Link to={"/createQuiz"}>Create new Quiz</Link>}
             </div>
           }
         </div>

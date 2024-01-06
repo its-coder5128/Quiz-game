@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 
 function ContestLanding(){
     const {questions,contestQuesData,handleContestPlayerData,changeIsContestto} = useQuiz()
+    let LeaderBoard = JSON.parse(window.localStorage.getItem("LeaderBoard"))
     const [name,setName] = useState("")
     const navigate = useNavigate()
 
@@ -29,6 +30,15 @@ function ContestLanding(){
             <input type="text" required placeholder="Enter your name..." value={name} onChange={(e) => setName(e.target.value)}/>
             <button type="submit">Submit</button>
             </form>
+            <h2>Leader Board :- </h2>
+            {LeaderBoard && LeaderBoard.length>0 ? <ul>
+                {
+                    LeaderBoard.map((item) => (
+                        <li key={item.$createdAt}>{item.PlayerName} : {item.Score}</li>
+                    ))
+                }
+            </ul> : <div><p>No entries yet</p></div>}
+            
         </div>
     )
 }

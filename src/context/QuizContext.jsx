@@ -18,6 +18,7 @@ export const QuizProvider = ({children}) => {
     const [contestQuesData,setContestQuesData] = useState(null)
     const [contestName,setContestName] = useState("")
     const [categories,setCategories] = useState([])
+    const [leaderBoard,setLeaderBoard] = useState([])
 
     const navigate = useNavigate()
 
@@ -30,11 +31,6 @@ export const QuizProvider = ({children}) => {
         .then((res) => res.json())
         .then((res) => setCategories(Object.keys(res)))
     },[])
-    useEffect(()=>{
-        
-        // window.localStorage.setItem("ContestLive",isContest)
-
-    },[isContest])
     useEffect(()=>{
         if(contestPlayerData && contestPlayerData.PlayerName.length>0)
             window.localStorage.setItem("PlayerData",JSON.stringify(contestPlayerData))
@@ -124,8 +120,11 @@ export const QuizProvider = ({children}) => {
         getAllContest()
     } 
 
-    const handleContestReq = (contestData) => {
+    const handleContestReq = async (contestData) => {
         console.log("contestData",contestData)
+        let response = await database.listDocuments(conf.appwrite_Database_ID, conf.appwrite_Contest_Players_Collection_ID,[Query.equal("contestId", [contestData.$id]),Query.orderDesc("Score"),Query.limit(100)])
+        console.log(response)
+        window.localStorage.setItem("LeaderBoard",JSON.stringify(response.documents))
         handleContestPlayerData("contestId",contestData.$id)
         setContestQuesData(contestData)
         setQuestions(JSON.parse(contestData.Questions))
@@ -134,9 +133,15 @@ export const QuizProvider = ({children}) => {
     const handleContestData = (data) =>{
         setContestQuesData(data)
     }
-    const createContestEntry = () => {
+    const createContestEntry = async () => {
         let item = JSON.parse(window.localStorage.getItem("PlayerData"))
         console.log(item)
+        try{
+            let response = await database.createDocument(conf.appwrite_Database_ID,conf.appwrite_Contest_Players_Collection_ID, ID.unique(),item);
+            console.log("response of player submit: ",response)
+        }catch(error){
+            console.error(error)
+        }
     }
 
     const quizData ={
