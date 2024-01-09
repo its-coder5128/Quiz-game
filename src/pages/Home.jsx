@@ -6,18 +6,16 @@ import { useQuiz } from '../context/QuizContext'
 import { Trash2 } from 'react-feather'
 
 function Home(){
-  const {user,handleLogout} = useAuth()
+  const {user} = useAuth()
   const {contests,changeIsContestto,removeContest,handleContestReq,handleContestData} = useQuiz()
   const navigate = useNavigate()
   
   useEffect(()=>{
     changeIsContestto(false)
     window.localStorage.setItem("ContestLive","false")
+    window.localStorage.setItem("contestQuesData",JSON.stringify(null))
     handleContestData(null)
   },[])
-  useEffect(()=>{
-    console.log("contest",contests)
-  },[contests])
 
   const createContest = ()=>{
     changeIsContestto(true)

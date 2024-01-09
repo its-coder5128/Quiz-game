@@ -9,6 +9,8 @@ import Home from './pages/Home.jsx'
 import Signup from './pages/Signup.jsx'
 import Signin from './pages/Signin.jsx'
 import ContestLanding from './pages/ContestLanding.jsx'
+import About from './pages/About.jsx'
+import Contact from './pages/Contact.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -16,6 +18,8 @@ const router = createBrowserRouter(
       <Route path="/" element={<BaseLayout/>}>
         <Route path='' >
           <Route index element={<Home/>}/>
+          <Route path='about' element={<About/>}/>
+          <Route path='contact' element={<Contact/>}/>
           <Route path='signup' element={<Signup/>}/>
           <Route path='signin' element={<Signin/>}/>
           <Route path='createQuiz' element={<App/>}/>

@@ -24,20 +24,34 @@ function ContestLanding(){
     },[questions])
     return(
         <div>
-            ContestLanding : {contestQuesData?.ContestName}
-            <label>Player Name : </label>
-            <form onSubmit={handlePlayerName}>
-            <input type="text" required placeholder="Enter your name..." value={name} onChange={(e) => setName(e.target.value)}/>
-            <button type="submit">Submit</button>
+            <p className=" p-4 text-4xl border-b-2 border-orange-600"><strong>{contestQuesData?.ContestName}</strong></p>
+            
+            <form
+                className=" m-4" 
+                onSubmit={handlePlayerName}>
+                <div className="py-4"> 
+                    <label className=" pr-3">Player Name : </label>
+                    <input
+                        className=" p-2 outline-none" 
+                        type="text" required placeholder="Enter your name..." value={name} onChange={(e) => setName(e.target.value)}/>
+                </div>
+                <button
+                    className=" p-4 bg-orange-600 w-80  text-white hover:bg-orange-700 duration-200" 
+                    type="submit">Play Contest</button>
             </form>
-            <h2>Leader Board :- </h2>
-            {LeaderBoard && LeaderBoard.length>0 ? <ul>
+            <h2 className=" p-4 text-3xl">Leader Board :- </h2>
+            {LeaderBoard && LeaderBoard.length>0 ? 
+            <ul>
                 {
                     LeaderBoard.map((item) => (
-                        <li key={item.$createdAt}>{item.PlayerName} : {item.Score}</li>
+                        <li 
+                        className=' flex w-full mx-auto rounded-xl overflow-hidden justify-between bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 mb-2 '
+                            key={item.$createdAt}>{item.PlayerName} : {item.Score}</li>
                     ))
                 }
-            </ul> : <div><p>No entries yet</p></div>}
+            </ul> : <div>
+                        <p>No entries yet</p>
+                    </div>}
             
         </div>
     )

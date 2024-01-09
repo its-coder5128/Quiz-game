@@ -6,6 +6,7 @@ import { ID } from "appwrite";
 const AuthContext = createContext()
 
 export const AuthProvider = ({children}) => {
+    const [err,setErr] = useState(false)
     const [loading,setLoading] = useState(true)
     const [user,setUser] = useState(null)
 
@@ -51,6 +52,7 @@ export const AuthProvider = ({children}) => {
             navigate("")     
 
         }catch(error){
+            setErr(true);
             console.log(error)
         }
 
@@ -68,6 +70,7 @@ export const AuthProvider = ({children}) => {
     }
     const contextData ={
         user,
+        err,
         handleRegisterNewUser,
         handleLogin,
         handleLogout,

@@ -10,7 +10,7 @@ const quizContext = createContext()
 export const QuizProvider = ({children}) => {
 
     const {user} = useAuth()
-
+    const [loading,setLoading] = useState(false)
     const [contestPlayerData,setContestPlayerData] = useState({contestId: "",PlayerName: "", Score: ""})
     const [isContest,setIscontest] = useState(false)
     const [questions,setQuestions] = useState([])
@@ -18,7 +18,6 @@ export const QuizProvider = ({children}) => {
     const [contestQuesData,setContestQuesData] = useState(null)
     const [contestName,setContestName] = useState("")
     const [categories,setCategories] = useState([])
-    const [leaderBoard,setLeaderBoard] = useState([])
 
     const navigate = useNavigate()
 
@@ -35,6 +34,14 @@ export const QuizProvider = ({children}) => {
         if(contestPlayerData && contestPlayerData.PlayerName?.length>0)
             window.localStorage.setItem("PlayerData",JSON.stringify(contestPlayerData))
     },[contestPlayerData])
+    useEffect(()=>{
+        if(loading)
+        {
+            setIscontest(false)
+            setLoading(false)
+            navigate("")
+        }
+    },[contests])
     const getAllContest = async () => {
         let response = await database.listDocuments(conf.appwrite_Database_ID, conf.appwrite_Contest_Ques_Collection_ID,[Query.orderDesc("$createdAt"),Query.limit(100)])
         console.log(response)
@@ -45,11 +52,9 @@ export const QuizProvider = ({children}) => {
         {     
             if(isContest && !contestQuesData)
             {
-                setIscontest(false)
                 const ques = JSON.stringify(questions);
                 createContest({User_ID: user?.$id,ContestName: contestName,Questions: ques})
                 getAllContest()
-                navigate("")  
             }
             else{
                 const quizData = {
@@ -63,24 +68,31 @@ export const QuizProvider = ({children}) => {
                 {
                     window.localStorage.setItem("contestQuesData",JSON.stringify(contestQuesData))
                     setIscontest(true)
+                    setLoading(false)
                     navigate("/contest")
                 }
                 else{
+                    setLoading(false)
                     navigate("/quiz")
                 }
             }
         }
     },[questions])
-
+    
     const handleContestPlayerData = (name,value) => {
         setContestPlayerData((prev) => ({...prev, [name] : value}))
         setContestPlayerData((prev) => ({...prev, contestId : contestQuesData?.$id}))
+
+        if(name == "Score")
+        {
+            createContestEntry()
+        }
     }
 
     const createContest = async (contestData) => {
         try{
+
             let response = await database.createDocument(conf.appwrite_Database_ID,conf.appwrite_Contest_Ques_Collection_ID, ID.unique(),contestData);
-            getAllContest()
             
         }catch(error){
             console.error(error)
@@ -92,6 +104,7 @@ export const QuizProvider = ({children}) => {
     }
     
     const fetchQuestions = (e,{limit,difficulties,category}) => {
+        setLoading(true)
         e.preventDefault()
 
         let cat = category.toLowerCase().replace(/ /g,"_").replace("&","and")
@@ -103,6 +116,7 @@ export const QuizProvider = ({children}) => {
 
     }
     const fetchQuestionsforContest = (e,{limit,difficulties,category,name}) => {
+        setLoading(true)
         e.preventDefault()
 
         setContestName(name)
@@ -135,7 +149,7 @@ export const QuizProvider = ({children}) => {
     }
     const createContestEntry = async () => {
         let item = JSON.parse(window.localStorage.getItem("PlayerData"))
-        console.log(item)
+        console.log("ITEM",item)
         try{
             let response = await database.createDocument(conf.appwrite_Database_ID,conf.appwrite_Contest_Players_Collection_ID, ID.unique(),item);
             console.log("response of player submit: ",response)
@@ -150,6 +164,7 @@ export const QuizProvider = ({children}) => {
         isContest,
         contests,
         contestQuesData,
+        loading,
         changeIsContestto,
         fetchQuestions,
         fetchQuestionsforContest,
