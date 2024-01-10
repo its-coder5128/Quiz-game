@@ -22,8 +22,7 @@ function QuestionSection(){
 
   const handleContestPlayer = () => {
     handleContestPlayerData("Score",score)
-    console.log("score",score)
-    
+   
     const quizData = {
       question : ques,
       indices : 0,
@@ -41,8 +40,10 @@ function QuestionSection(){
     setScore(QnS.scores)
     
     if(contestPlayerData && contestPlayerData.contestId.length>0)
-    {changeIsContestto(true)
-    window.localStorage.setItem("ContestLive","true")}
+    {
+      changeIsContestto(true)
+      window.localStorage.setItem("ContestLive","true")
+    }
     setLoading(false)
   },[])
 
@@ -83,7 +84,7 @@ function QuestionSection(){
                 <strong >Quiz completed</strong>
                 {
                   isContest?
-                  <strong className=' p-1  text-xl'>Score : {score}</strong>:null
+                  <strong className=' p-1 text-xl'>Score : {score}</strong>:null
                 }
               </div>
               {isContest? <div>

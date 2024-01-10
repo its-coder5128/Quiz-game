@@ -24,7 +24,6 @@ function Home(){
 
   return (
     <div className='flex flex-col'>
-
         <div className='  flex flex-col justify-center items-center '>
           <div className=' w-full '>
             <Link to={"/createQuiz"}> 

@@ -13,7 +13,7 @@ export const AuthProvider = ({children}) => {
     const navigate = useNavigate()
 
     useEffect(()=>{
-        getUseronLoad()
+        getUseronLoad() 
     },[])
     
     const getUseronLoad = async ()=>{
@@ -32,7 +32,6 @@ export const AuthProvider = ({children}) => {
 
         try{
             let response = await account.create(ID.unique(), cred.Email,cred.Password,cred.FirstName,cred.LastName,cred.Phone);
-            console.log("res",response)
             await account.createEmailSession(cred.Email,cred.Password)
             let accDetails = await account.get();
             setUser(accDetails)

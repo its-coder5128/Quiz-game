@@ -14,13 +14,8 @@ function App() {
   const ChangleHandler = (e) => {
     let name = e.target.name
     let value = e.target.value
-    setSelectedOueries((prev) => ({...prev, [name] : value}))
-    
+    setSelectedOueries((prev) => ({...prev, [name] : value}))  
   }
-  useEffect(()=>{
-    console.log(selectedOueries)
-    console.log(questions)
-  },[selectedOueries,questions])
   return (
     <div className=" w-full flex justify-center">
       <form 
@@ -69,7 +64,7 @@ function App() {
             </select>
           </div>
           <button 
-            className=" m-2 p-4 bg-orange-600 text-white hover:bg-orange-700 dura"
+            className=" m-2 p-4 bg-orange-600 text-white hover:bg-orange-700 duration-200"
             type="submit">{loading?"Loading...":isContest?"Create Contest":"Play Quiz"}</button>
       </form>
     </div>

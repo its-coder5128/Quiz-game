@@ -4,8 +4,8 @@ import { useNavigate } from "react-router";
 
 function ContestLanding(){
     const {questions,contestQuesData,handleContestPlayerData,changeIsContestto} = useQuiz()
-    let LeaderBoard = JSON.parse(window.localStorage.getItem("LeaderBoard"))
     const [name,setName] = useState("")
+    let LeaderBoard = JSON.parse(window.localStorage.getItem("LeaderBoard"))
     const navigate = useNavigate()
 
     const handlePlayerName = (e) => {
@@ -19,13 +19,9 @@ function ContestLanding(){
         window.localStorage.setItem("ContestLive","true")
     },[])
 
-    useEffect(()=>{
-        console.log("contestLanding",questions)
-    },[questions])
     return(
         <div>
             <p className=" p-4 text-4xl border-b-2 border-orange-600"><strong>{contestQuesData?.ContestName}</strong></p>
-            
             <form
                 className=" m-4" 
                 onSubmit={handlePlayerName}>

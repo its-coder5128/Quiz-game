@@ -8,10 +8,7 @@ export default function Signin() {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onSubmit = (cred) => {
-        console.log("cred", cred)
         handleLogin(cred)
-        if(errors && errors.length>0)
-            console.log("error", errors);
     }
     
     return (
@@ -31,7 +28,7 @@ export default function Signin() {
                             <label>Password: </label>
                             <input
                                 className=" p-2 outline-none" 
-                                type="password" placeholder="Password" {...register("Password", {required: true, minLength: 8})} />
+                                type="password" placeholder="Password" {...register("Password", {required: true})} />
                         </div>
     
                         <button

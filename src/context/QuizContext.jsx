@@ -11,6 +11,7 @@ export const QuizProvider = ({children}) => {
 
     const {user} = useAuth()
     const [loading,setLoading] = useState(false)
+    const [updatePlayer,setUpdatePlayer] = useState(false)
     const [contestPlayerData,setContestPlayerData] = useState({contestId: "",PlayerName: "", Score: ""})
     const [isContest,setIscontest] = useState(false)
     const [questions,setQuestions] = useState([])
@@ -42,9 +43,14 @@ export const QuizProvider = ({children}) => {
             navigate("")
         }
     },[contests])
+    useEffect(()=>{
+        if(updatePlayer)
+            createContestEntry()
+
+        setUpdatePlayer(false)
+    },[updatePlayer])
     const getAllContest = async () => {
         let response = await database.listDocuments(conf.appwrite_Database_ID, conf.appwrite_Contest_Ques_Collection_ID,[Query.orderDesc("$createdAt"),Query.limit(100)])
-        console.log(response)
         setContest(response.documents)
     } 
     useEffect(()=>{
@@ -85,15 +91,13 @@ export const QuizProvider = ({children}) => {
 
         if(name == "Score")
         {
-            createContestEntry()
+            setUpdatePlayer(true)
         }
     }
 
     const createContest = async (contestData) => {
         try{
-
-            let response = await database.createDocument(conf.appwrite_Database_ID,conf.appwrite_Contest_Ques_Collection_ID, ID.unique(),contestData);
-            
+            let response = await database.createDocument(conf.appwrite_Database_ID,conf.appwrite_Contest_Ques_Collection_ID, ID.unique(),contestData);       
         }catch(error){
             console.error(error)
         }
@@ -135,9 +139,7 @@ export const QuizProvider = ({children}) => {
     } 
 
     const handleContestReq = async (contestData) => {
-        console.log("contestData",contestData)
         let response = await database.listDocuments(conf.appwrite_Database_ID, conf.appwrite_Contest_Players_Collection_ID,[Query.equal("contestId", [contestData.$id]),Query.orderDesc("Score"),Query.limit(100)])
-        console.log(response)
         window.localStorage.setItem("LeaderBoard",JSON.stringify(response.documents))
         handleContestPlayerData("contestId",contestData.$id)
         setContestQuesData(contestData)
@@ -149,10 +151,8 @@ export const QuizProvider = ({children}) => {
     }
     const createContestEntry = async () => {
         let item = JSON.parse(window.localStorage.getItem("PlayerData"))
-        console.log("ITEM",item)
         try{
             let response = await database.createDocument(conf.appwrite_Database_ID,conf.appwrite_Contest_Players_Collection_ID, ID.unique(),item);
-            console.log("response of player submit: ",response)
         }catch(error){
             console.error(error)
         }
