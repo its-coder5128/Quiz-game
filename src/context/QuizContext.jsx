@@ -60,7 +60,7 @@ export const QuizProvider = ({children}) => {
             {
                 const ques = JSON.stringify(questions);
                 createContest({User_ID: user?.$id,ContestName: contestName,Questions: ques})
-                getAllContest()
+                
             }
             else{
                 const quizData = {
@@ -98,6 +98,7 @@ export const QuizProvider = ({children}) => {
     const createContest = async (contestData) => {
         try{
             let response = await database.createDocument(conf.appwrite_Database_ID,conf.appwrite_Contest_Ques_Collection_ID, ID.unique(),contestData);       
+            getAllContest()
         }catch(error){
             console.error(error)
         }
